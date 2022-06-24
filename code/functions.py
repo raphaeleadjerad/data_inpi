@@ -72,6 +72,24 @@ def import_all_files(path2data, extension="*.csv"):
     return list_df
 
 
+def transform_rcs(year):
+    if year in ["2019", "2020"]:
+        list_df = import_all_files("data" + year + "/", "*.zip")
+    if year in ["2018"]:
+        list_df = import_all_files("data" + year + "/", "*.csv")
+    print(len(list_df))
+    if year in ["2019", "2020"]:
+        li = []
+        for i in range(len(list_df)):
+            temp = pd.concat(list_df[i])
+            li.append(temp)
+        df_final = pd.concat(li)
+    if year in ["2018"]:
+        df_final = pd.concat(list_df)
+    print(df_final.shape)
+    return df_final
+
+
 def export_2_minio(year, df_final):
     S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
     fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})

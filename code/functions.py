@@ -1,7 +1,25 @@
+import requests
 import tarfile
 import os
 import glob
 import pandas as pd
+
+
+def import_tgz_raw():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
+    for i in ["2018", "2019", "2020"]:
+        url = 'http://data.cquest.org/inpi_rncs/imr/stock/" + i + ".tgz'
+        target_path = i + '.tgz'
+
+        response = requests.get(url, stream=True)
+        if response.status_code == 200:
+            with open(target_path, 'wb') as f:
+                f.write(response.raw.read())
+    return None
 
 
 def import_tgz(year, out_path):

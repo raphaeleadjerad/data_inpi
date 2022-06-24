@@ -4,6 +4,8 @@ import os
 import glob
 import pandas as pd
 from zipfile import ZipFile
+import s3fs
+
 
 def download_tgz_raw():
     """_summary_
@@ -37,26 +39,6 @@ def import_tgz(year, out_path):
     return None
 
 
-def import_all_csv(path2data):
-    """_summary_
-
-    Args:
-        path (_type_): _description_
-    """
-
-    extension = "*.csv"
-    all_csv_files = [file for path, subdir, files in os.walk(path2data) for \
-                    file in glob.glob(os.path.join(path, extension))]
-    list_df = []
-    for filename in all_csv_files:
-        # print(filename)
-        filesize = os.path.getsize(filename)
-        if filesize != 0:
-            temp_df = pd.read_csv(filename, sep=";")
-            temp_df["file_path"] = filename
-            list_df.append(temp_df)
-
-
 def open_complex_file(zip_file, fi):
     df = pd.read_csv(zip_file.open(fi), sep=";")
     df["source"] = fi
@@ -70,7 +52,7 @@ def import_all_files(path2data, extension="*.csv"):
         path (_type_): _description_
     """
     all_files = [file for path, subdir, files in os.walk(path2data) for \
-                    file in glob(os.path.join(path, extension))]
+                    file in glob.glob(os.path.join(path, extension))]
     #print(all_files)
     list_df = []
     for filename in all_files:
@@ -88,3 +70,15 @@ def import_all_files(path2data, extension="*.csv"):
                 if text_file.filename.endswith('.csv')]
             list_df.append(temp_df)
     return list_df
+
+
+def export_2_minio(year, df_final):
+    S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+    fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+    BUCKET_OUT = "radjerad"
+    FILE_KEY_OUT_S3 = "inpi/inpi_" + year + ".csv"
+    FILE_PATH_OUT_S3 = BUCKET_OUT + "/" + FILE_KEY_OUT_S3
+
+    with fs.open(FILE_PATH_OUT_S3, 'w') as file_out:
+        df_final.to_csv(file_out)
+    return None

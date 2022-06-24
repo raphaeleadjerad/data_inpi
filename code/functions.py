@@ -3,9 +3,9 @@ import tarfile
 import os
 import glob
 import pandas as pd
+from zipfile import ZipFile
 
-
-def import_tgz_raw():
+def download_tgz_raw():
     """_summary_
 
     Returns:
@@ -56,3 +56,35 @@ def import_all_csv(path2data):
             temp_df["file_path"] = filename
             list_df.append(temp_df)
 
+
+def open_complex_file(zip_file, fi):
+    df = pd.read_csv(zip_file.open(fi), sep=";")
+    df["source"] = fi
+    return df
+
+
+def import_all_files(path2data, extension="*.csv"):
+    """_summary_
+
+    Args:
+        path (_type_): _description_
+    """
+    all_files = [file for path, subdir, files in os.walk(path2data) for \
+                    file in glob(os.path.join(path, extension))]
+    #print(all_files)
+    list_df = []
+    for filename in all_files:
+
+        filesize = os.path.getsize(filename)
+        if filesize != 0 and extension == "*.csv":
+            temp_df = pd.read_csv(filename, sep=";")
+            temp_df["file_path"] = filename
+            list_df.append(temp_df)
+
+        if filesize != 0 and extension == "*.zip":
+            zip_file = ZipFile(filename)         
+            temp_df = [open_complex_file(zip_file, text_file.filename)
+                for text_file in zip_file.infolist()
+                if text_file.filename.endswith('.csv')]
+            list_df.append(temp_df)
+    return list_df

@@ -1,9 +1,13 @@
-import requests
-import tarfile
 import os
 import glob
-import pandas as pd
 from zipfile import ZipFile
+import shutil
+import tarfile
+import requests
+
+
+import pandas as pd
+
 import s3fs
 
 
@@ -53,7 +57,7 @@ def import_all_files(path2data, extension="*.csv"):
     """
     all_files = [file for path, subdir, files in os.walk(path2data) for \
                     file in glob.glob(os.path.join(path, extension))]
-    #print(all_files)
+    # print(all_files)
     list_df = []
     for filename in all_files:
 
@@ -100,3 +104,33 @@ def export_2_minio(year, df_final):
     with fs.open(FILE_PATH_OUT_S3, 'w') as file_out:
         df_final.to_csv(file_out)
     return None
+
+
+def import_by_decade(decennie=1970):
+    """_summary_
+
+    Args:
+        decennie (int, optional): _description_. Defaults to 1970.
+
+    Returns:
+        _type_: _description_
+    """
+    url = \
+    f"https://www.insee.fr/fr/statistiques/fichier/4769950/deces-{decennie}-{decennie+9}-csv.zip"
+    req = requests.get(url)
+    with open(f"deces_{decennie}.zip", 'wb') as f:
+        f.write(req.content)
+    with ZipFile(f"deces_{decennie}.zip", 'r') as zip_ref:
+        zip_ref.extractall(f"deces_{decennie}")
+    csv_files = glob.glob(os.path.join(f"deces_{decennie}", "*.csv"))
+    df = [pd.read_csv(f, sep=";", encoding="utf-8").assign(annee=f)  \
+                for f in csv_files]
+    df = pd.concat(df)
+    df[['nom', 'prenom']] = df['nomprenom'].str.split("*", expand=True)
+    df['prenom'] = df['prenom'].str.replace("/", "")
+    df['annee'] = (df['annee'].str.rsplit("/")
+                                .str[-1].str.replace("(Deces_|.csv|deces-)", "")
+                                .astype(int))
+    shutil.rmtree(f"deces_{decennie}") 
+    os.remove(f"deces_{decennie}.zip")
+    return df

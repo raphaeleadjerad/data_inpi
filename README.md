@@ -48,3 +48,13 @@ Dans ces cas, 6 types de fichiers supplémentaires, numérotés,sont transmis co
 - Evénements modifiant ou complétant les dossiers d’immatriculation des personnes morales (2) ou physiques (4) PM_EVT, PP_EVT
 - Evénements  modifiant  ou  complétant  les  informations  relatives  aux  représentants  (6)  ou  aux établissements (9) ep_nouveau_modifie _EVT, ets_nouveau_modifie_EVT
 - Evénements  supprimant  des  représentants  (7 –Représentant  partant)  ou  des  établissements (10 – Etablissement supprimé) ep_partant_EVT, ets_supprime_EVT.
+
+
+## Identifiant des représentants
+
+Pour les représentants on a la variable de Qualité (Gérant, Liquidateur, Associé), donc on connait pour chaque société le gérant. 
+
+## Identification des SCI
+
+On a la Forme juridique dans la table PM (variable obligatoirement renseignée). 
+On a donc les siren des SCI, on peut vérifier qu'on en a le même nombre que dans les 2072. 

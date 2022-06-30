@@ -4,10 +4,7 @@ from zipfile import ZipFile
 import shutil
 import tarfile
 import requests
-
-
 import pandas as pd
-
 import s3fs
 
 

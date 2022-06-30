@@ -1,0 +1,7 @@
+bs4
+requests
+pandas
+tarfile
+shutil
+zipfile
+s3fs

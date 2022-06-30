@@ -25,3 +25,24 @@ Les tribunaux représentés sont au nombre de 148 répartis comme suit (liste fo
 
 On travaille sur les données de stocks (stocks initiaux et stocks partiels)
 Les données sont organisées et zippées par greffe par année/mois/jour de la transmission. 
+
+## Détail des données
+
+ - Constitution du dossier d’une personne morale ou personne physique(identifiée par son siren et son n° de gestion), dans le cas d’une 1ère immatriculation,
+ - Mise  à  jour des  informations  disponibles  sur  une personne  morale  ou  personne  physique en cas de modification ou de radiation
+
+ Dans le cas d’une immatriculation (Personne morale ou Personne physique), le dossier est composé:
+ - A minima, d’informations sur l’identité  de  la  personne (ex. date d’immatriculation, inscription principale   ou   secondaire,   dénomination,   nom,   prénom, forme   juridique,   capital, activité principale etc.)
+ - Complété éventuellement par des informations relatives aux:
+    - Représentants
+    - Etablissements (établissement principal et/ou établissements secondaires)
+    - Observations (incluant les procédures collectives, mentionsde radiation etc.)
+    - Dépôt des comptes annuels
+    - Dépôt des actes
+
+En cas de mise à jour d’un dossier suite à un événement (modification, radiation), les fichiers transmis ont une structure identique aux fichiers créés à l’immatriculation  avec la  présence  de 2  champs spécifiques: la date de l’événement (Date_Greffe) et le libellé de l’événement (Libelle_Evt)
+
+Dans ces cas, 6 types de fichiers supplémentaires, numérotés,sont transmis correspondant à:
+- Evénements modifiant ou complétant les dossiers d’immatriculation des personnes morales (2) ou physiques (4) PM_EVT, PP_EVT
+- Evénements  modifiant  ou  complétant  les  informations  relatives  aux  représentants  (6)  ou  aux établissements (9) ep_nouveau_modifie _EVT, ets_nouveau_modifie_EVT
+- Evénements  supprimant  des  représentants  (7 –Représentant  partant)  ou  des  établissements (10 – Etablissement supprimé) ep_partant_EVT, ets_supprime_EVT.

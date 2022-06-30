@@ -1,5 +1,7 @@
 # Donnees RCS
 
+http://data.cquest.org/inpi_rncs/imr/Doc_Tech_IMR_Mai_2019_v1.5.1.pdf
+
 L’INPI rediffuse des informations provenant  des  inscriptions  enregistrées  auprès  des greffes des tribunaux de commerce, des tribunaux d’Instance des départements du Bas-Rhin, du Haut-Rhin et de la Moselle, et des tribunaux mixtes de commerce des départements et régions d'outre-mer, telles  quetransmises  par  les  greffes  à  compter  du  5  mai  2017,  auxquelles s’ajoute désormais le stock des dossiers actifs (personnes morales et physiques).
 
 Le contenu mis à disposition par l’INPI comprend:

@@ -73,6 +73,34 @@ def import_all_files(path2data, extension="*.csv"):
     return list_df
 
 
+def import_all_rep(path2data, extension="*.csv"):
+    """_summary_
+
+    Args:
+        path (_type_): _description_
+    """
+    all_files = [file for path, subdir, files in os.walk(path2data) for \
+                    file in glob.glob(os.path.join(path, extension))]
+    # print(all_files)
+    list_df = []
+    for filename in all_files:
+
+        filesize = os.path.getsize(filename)
+        if filesize != 0 and extension == "*.csv":
+            temp_df = pd.read_csv(filename, sep=";")
+            temp_df["file_path"] = filename
+            list_df.append(temp_df)
+
+        if filesize != 0 and extension == "*.zip":
+            zip_file = ZipFile(filename)         
+            temp_df = [open_complex_file(zip_file, text_file.filename)
+                for text_file in zip_file.infolist()
+                if text_file.filename.endswith('5_rep.csv')]
+            temp_df = pd.concat(temp_df)
+            list_df.append(temp_df)
+    return list_df
+
+
 def transform_rcs(year):
     if year in ["2019", "2020"]:
         list_df = import_all_files("data" + year + "/", "*.zip")

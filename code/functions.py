@@ -157,3 +157,15 @@ def export_2_minio(year, df_final):
     with fs.open(FILE_PATH_OUT_S3, 'w') as file_out:
         df_final.to_csv(file_out)
     return None
+
+
+def export2minio(nom_fichier, df_final):
+    S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+    fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+    BUCKET_OUT = "radjerad"
+    FILE_KEY_OUT_S3 = "inpi/" + nom_fichier
+    FILE_PATH_OUT_S3 = BUCKET_OUT + "/" + FILE_KEY_OUT_S3
+
+    with fs.open(FILE_PATH_OUT_S3, 'w') as file_out:
+        df_final.to_csv(file_out, index=False, encoding="utf-8", sep=";")
+    return None

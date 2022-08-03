@@ -256,3 +256,15 @@ def add_code_com(df_rep_pm):
     df_rep_pm["code_departement"] = df_rep_pm["code_postal"].astype(str).str.slice(start=0, stop=2)
     df_rep_pm = pd.merge(df_rep_pm, code_postal, on=["code_departement", "commune"], how="left")
     return df_rep_pm
+
+
+def import_file(nom_fichier):
+    # Create filesystem object
+    S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+    fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+    BUCKET = "radjerad"
+    FILE_KEY_S3 = nom_fichier
+    FILE_PATH_S3 = BUCKET + "/" + FILE_KEY_S3
+    with fs.open(FILE_PATH_S3, mode="rb") as file_in:
+        df_rep_pm = pd.read_csv(file_in, sep=";", encoding="utf-8")
+    return df_rep_pm

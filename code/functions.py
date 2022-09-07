@@ -9,10 +9,10 @@ import s3fs
 
 
 def download_tgz_raw():
-    """_summary_
+    """ Function that downloads raw gzip files from INPI
 
     Returns:
-        _type_: _description_
+        None: function that writes the gzip file in environment but returns None
     """
     for i in ["2018", "2019", "2020"]:
         url = 'http://data.cquest.org/inpi_rncs/imr/stock/" + i + ".tgz'

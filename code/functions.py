@@ -12,25 +12,28 @@ def download_tgz_raw():
     """ Function that downloads raw gzip files from INPI
 
     Returns:
-        None: function that writes the gzip file in environment but returns None
+        None: function that writes the gzip file in environment but returns 
+        None
     """
     for i in ["2018", "2019", "2020"]:
-        url = 'http://data.cquest.org/inpi_rncs/imr/stock/" + i + ".tgz'
+        url = 'http://data.cquest.org/inpi_rncs/imr/stock/' + i + '.tgz'
         target_path = i + '.tgz'
 
         response = requests.get(url, stream=True)
         if response.status_code == 200:
             with open(target_path, 'wb') as f:
                 f.write(response.raw.read())
+        else:
+            print("Erreur lecture de fichier")
     return None
 
 
 def import_tgz(year, out_path):
-    """_summary_
+    """Function that extracts all files from gzip INPI file
 
     Args:
-        year (_type_): _description_
-        out_path (_type_): _description_
+        year (str): year of the gzip file to treat
+        out_path (str): folder to store the extracted files in
 
     Returns:
         _type_: _description_

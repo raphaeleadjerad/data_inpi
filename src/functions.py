@@ -1,46 +1,10 @@
 import os
 import glob
 from zipfile import ZipFile
-import shutil
-import tarfile
-import requests
 import pandas as pd
 import s3fs
 
 
-def download_tgz_raw():
-    """ Function that downloads raw gzip files from INPI
-
-    Returns:
-        None: function that writes the gzip file in environment but returns 
-        None
-    """
-    for i in ["2018", "2019", "2020"]:
-        url = 'http://data.cquest.org/inpi_rncs/imr/stock/' + i + '.tgz'
-        target_path = i + '.tgz'
-
-        response = requests.get(url, stream=True)
-        if response.status_code == 200:
-            with open(target_path, 'wb') as f:
-                f.write(response.raw.read())
-        else:
-            print("Erreur lecture de fichier")
-    return None
-
-
-def import_tgz(year, out_path):
-    """Function that extracts all files from gzip INPI file
-
-    Args:
-        year (str): year of the gzip file to treat
-        out_path (str): folder to store the extracted files in
-
-    Returns:
-        _type_: _description_
-    """
-    tar = tarfile.open(year + ".tgz", "r:gz", encoding='utf-8')
-    tar.extractall(out_path)
-    return None
 
 
 def open_complex_file(zip_file, fi):

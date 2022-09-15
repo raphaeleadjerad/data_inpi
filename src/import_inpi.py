@@ -3,6 +3,7 @@
 
 import tarfile
 import requests
+from bs4 import BeautifulSoup
 
 
 def _download_tgz_raw():
@@ -45,3 +46,45 @@ def import_inpi():
     _download_tgz_raw()
     for year in ["2018", "2019", "2020"]:
         _import_tgz(year, "./data" + year)
+
+
+def _is_directory(url):
+    """Function to determine if a link is a directory or not
+
+    Args:
+        url (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    if(url.endswith('/') and ".." not in url):
+        return True
+    else:
+        return False
+
+
+def find_links(url):
+    """Function that explores all sublinks of an url to download
+    every files
+    Args:
+        url (_type_): _description_
+    """
+    list_urls = []
+    page = requests.get(url).content
+    bs_obj = BeautifulSoup(page, 'html.parser')
+    maybe_directories = bs_obj.findAll('a', href=True)
+    for link in maybe_directories:
+        if _is_directory(link['href']):
+            new_url = url + link['href']
+            print(new_url)
+            list_urls.append(new_url)
+            print(list_urls)
+            find_links(new_url)  # recursion
+        else:
+            if link['href'].endswith('.zip'):
+                target_path = link['href']
+                response = requests.get(list_urls[-1] + link['href'],
+                    stream=True)
+                if response.status_code == 200:
+                    with open(target_path, 'wb') as myfile:
+                        myfile.write(response.raw.read())

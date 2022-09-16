@@ -64,8 +64,8 @@ def transform_rcs(year):
         _type_: _description_
     """
     if year in ["2017"]:
-        list_df_rep = _import_all_files("/", '5_rep.csv', "*.zip")
-        list_df_pm = _import_all_files("/", '_PM.csv', "*.zip")
+        list_df_rep = _import_all_files("data" + year + "/", '5_rep.csv', "*.zip")
+        list_df_pm = _import_all_files("data" + year + "/", '_PM.csv', "*.zip")
         list_df_rep = [list_df_rep[i][0] for i in range(134)]
         list_df_pm = [list_df_pm[i][0] for i in range(134)]
     if year in ["2019", "2020"]:
@@ -97,4 +97,6 @@ def transform_rcs(year):
     print("taille des tables")
     print(df_final_rep.shape)
     print(df_final_pm.shape)
+    df_final_pm["year"] = year
+    df_final_rep["year"] = year
     return df_final_rep, df_final_pm

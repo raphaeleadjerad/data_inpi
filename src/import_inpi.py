@@ -63,13 +63,12 @@ def _is_directory(url):
         return False
 
 
-def find_links(url):
+def find_links(url, list_urls):
     """Function that explores all sublinks of an url to download
     every files
     Args:
         url (_type_): _description_
     """
-    list_urls = []
     page = requests.get(url).content
     bs_obj = BeautifulSoup(page, 'html.parser')
     maybe_directories = bs_obj.findAll('a', href=True)
@@ -79,12 +78,11 @@ def find_links(url):
             print(new_url)
             list_urls.append(new_url)
             print(list_urls)
-            find_links(new_url)  # recursion
+            find_links(new_url, list_urls)  # recursion
         else:
             if link['href'].endswith('.zip'):
                 target_path = link['href']
-                response = requests.get(list_urls[-1] + link['href'],
-                    stream=True)
+                response = requests.get(list_urls[-1] + link['href'], stream=True)
                 if response.status_code == 200:
                     with open(target_path, 'wb') as myfile:
                         myfile.write(response.raw.read())

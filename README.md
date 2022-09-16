@@ -1,5 +1,6 @@
 # Donnees RCS
 
+
 http://data.cquest.org/inpi_rncs/imr/Doc_Tech_IMR_Mai_2019_v1.5.1.pdf
 
 L’INPI rediffuse des informations provenant  des  inscriptions  enregistrées  auprès  des greffes des tribunaux de commerce, des tribunaux d’Instance des départements du Bas-Rhin, du Haut-Rhin et de la Moselle, et des tribunaux mixtes de commerce des départements et régions d'outre-mer, telles  quetransmises  par  les  greffes  à  compter  du  5  mai  2017,  auxquelles s’ajoute désormais le stock des dossiers actifs (personnes morales et physiques).
@@ -58,3 +59,7 @@ Pour les représentants on a la variable de Qualité (Gérant, Liquidateur, Asso
 
 On a la Forme juridique dans la table PM (variable obligatoirement renseignée). 
 On a donc les siren des SCI, on peut vérifier qu'on en a le même nombre que dans les 2072. 
+
+## Structure du code
+
+- Le code `01_main_import.py` permet d'importer les données brutes de l'Inpi des tables représentants et personne morale et d'en faire deux tables brutes. Il utilise les modules `transform_rcs`, `export`, `import_inpi`. 

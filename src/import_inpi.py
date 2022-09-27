@@ -1,7 +1,10 @@
 """This module defines functions to import data from INPI source
 """
 
+import os
 import tarfile
+import s3fs
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
@@ -86,3 +89,24 @@ def find_links(url, list_urls):
                 if response.status_code == 200:
                     with open(target_path, 'wb') as myfile:
                         myfile.write(response.raw.read())
+
+
+def import_inpi_s3():
+    """_summary_
+    Function that imports files from minio
+    Args:
+        year (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    s3_url = "https://" + os.environ["AWS_S3_ENDPOINT"]
+    conn = s3fs.S3FileSystem(client_kwargs={'endpoint_url': s3_url})
+    bucket = "radjerad/diffusion/inpi/"
+    path2data = [bucket + "df_pm_all_years.csv",
+                    bucket + "df_rep_all_years.csv"]
+    with conn.open(path2data[0], mode="rb") as file_in:
+        personnes_morales = pd.read_csv(file_in, sep=";")
+    with conn.open(path2data[1], mode="rb") as file_in:
+        representants = pd.read_csv(file_in, sep=";")
+    return personnes_morales, representants
